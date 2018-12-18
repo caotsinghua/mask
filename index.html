@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <style>
+      .demo {
+      }
+      .bar,
+      .day,
+      .night {
+        width: 225px;
+        height: 45px;
+        border-radius: 45px;
+      }
+      .bar {
+        position: relative;
+        padding: 5px;
+        box-shadow: 2px 2px 10px 3px #ccc;
+        margin: 20px auto;
+      }
+      .day {
+        background: url("./assets/day.jpg") no-repeat;
+        background-size: cover;
+        position: absolute;
+      }
+      .night {
+        background: url("./assets/night.jpg") no-repeat;
+        background-size: cover;
+        position: absolute;
+        mask-type: alpha;
+        -webkit-mask-image: radial-gradient(
+          circle at 22.5px 22.5px,
+          rgba(0, 0, 0, 0) 22.5px,
+          rgba(0, 0, 0, 1) 24.5px
+        );
+        transition: 2s ease;
+      }
+      .bar.checked > .night {
+        -webkit-mask-image: radial-gradient(
+          circle at 202.5px 22.5px,
+          rgba(0, 0, 0, 1) 22.5px,
+          rgba(0, 0, 0, 0) 24.5px
+        );
+      }
+      .clip {
+        position: relative;
+        width: 450px;
+        height: 90px;
+        margin: 10px auto;
+      }
+      .clip .left {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: url("./assets/day.jpg") no-repeat;
+        background-size: cover;
+      }
+      .clip .right {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: url("./assets/night.jpg") no-repeat;
+        background-size: cover;
+        mask-type: alpha;
+        mask-image: linear-gradient(
+          top right,
+          rgba(0, 0, 0, 1) 50%,
+          rgba(0, 0, 0, 0) 50%
+        );
+        -webkit-mask-image: -webkit-linear-gradient(
+          top right,
+          rgba(0, 0, 0, 1) 50%,
+          rgba(0, 0, 0, 0) 50%
+        );
+      }
+      .ticket-wrap {
+        margin: 0 auto;
+        width: 288px;
+        height: 176px;
+        mask: url("./assets/mask2.svg");
+        -webkit-mask: url("./assets/mask2.svg");
+        mask-size: cover;
+        -webkit-mask-size: cover;
+      }
+      .ticket {
+        width: 288px;
+        height: 176px;
+        display: flex;
+        flex-direction: column;
+        background: linear-gradient(134deg, #3023ae 0%, #c86dd7 100%);
+        margin: 0;
+      }
+      .ticket .content {
+        width: 100%;
+        flex: 1;
+        background: url("./assets/back.jpeg") no-repeat;
+        background-size: 100% auto;
+        box-sizing: border-box;
+        padding: 20px;
+        color: #fff;
+      }
+      .ticket .btn {
+        height: 56px;
+        width: 100%;
+        line-height: 56px;
+        outline: none;
+        border: none;
+        font-size: 20px;
+        color: #fff;
+        background: transparent;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        background: #ccc;
+      }
+      .haimian {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        mask: url("./assets/spongebob.gif");
+        -webkit-mask: url("./assets/spongebob.gif");
+        mask-size: 300px auto;
+        -webkit-mask-size: 300px auto;
+        mask-repeat: no-repeat;
+        -webkit-mask-repeat: no-repeat;
+        mask-position: center;
+        -webkit-mask-position: center;
+      }
+      .sponge {
+        width: 100%;
+        height: 700px;
+        background: url("./assets/sponge.jpg");
+      }
+    </style>
+  </head>
+  <body>
+    <div class="demo">
+      <div class="bar" id="check-bar">
+        <div class="day"></div>
+        <div class="night"></div>
+      </div>
+      <div class="clip">
+        <div class="left"></div>
+        <div class="right"></div>
+      </div>
+
+      <div class="ticket-wrap">
+        <div class="ticket">
+          <div class="content">asdd</div>
+          <button class="btn">buy</button>
+        </div>
+      </div>
+      <div class="haimian"><div class="sponge"></div></div>
+    </div>
+    <script>
+      const checkBar = document.querySelector("#check-bar");
+      checkBar.isMoving = false;
+      checkBar.addEventListener("mousedown", function(e) {
+        console.log("moved");
+        checkBar.isMoving = true;
+      });
+      checkBar.addEventListener("mousemove", function(e) {
+        if (this.isMoving) {
+          const { layerX } = e;
+          if (layerX <= 22.5) return;
+          if (layerX >= this.clientWidth - 32.5) return;
+          const percent = (layerX / (this.clientWidth - 10)).toFixed(2);
+
+          checkBar.querySelector(".night").style["-webkit-mask-image"] = `
+          radial-gradient(
+          circle at ${layerX}px 22.5px,
+          rgba(0, 0, 0, ${percent}) 22.5px,
+          rgba(0, 0, 0, ${1 - percent}) 24.5px
+        )
+          `;
+        }
+      });
+      checkBar.addEventListener("mouseup", function(e) {
+        checkBar.isMoving = false;
+        console.log("move end");
+      });
+    </script>
+  </body>
+</html>
